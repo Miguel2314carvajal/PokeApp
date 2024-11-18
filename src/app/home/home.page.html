@@ -1,0 +1,87 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="danger">
+    <ion-title class="pokemon-title">
+      Buscador Pokémon
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="pokemon-content">
+  <div class="search-container">
+    <ion-item class="search-box">
+      <ion-label position="floating">Nombre del Pokémon</ion-label>
+      <ion-input 
+        [(ngModel)]="searchTerm" 
+        (keyup.enter)="searchPokemon()"
+        [placeholder]="placeholder"
+        class="pokemon-input">
+      </ion-input>
+    </ion-item>
+    
+    <ion-button expand="block" (click)="searchPokemon()" class="search-button" color="danger" size="large">
+      <ion-icon name="search-outline" slot="start"></ion-icon>
+      Buscar Pokémon
+    </ion-button>
+
+    <!-- Loading spinner -->
+    <div class="loading-container" *ngIf="loading">
+      <ion-spinner name="crescent" color="danger"></ion-spinner>
+      <p>Buscando Pokémon...</p>
+    </div>
+
+    <!-- Error message -->
+    <div class="error-message" *ngIf="error">
+      <ion-icon name="alert-circle-outline" color="danger"></ion-icon>
+      <p>{{ error }}</p>
+    </div>
+
+    <!-- Pokemon Details -->
+    <ion-card *ngIf="pokemon" class="pokemon-card">
+      <div class="pokemon-name">
+        #{{ pokemon.id }} {{ pokemon.name }}
+      </div>
+
+      <div class="pokemon-image">
+        <img [src]="pokemon.sprites.front_default" alt="Pokémon frontal">
+        <img [src]="pokemon.sprites.back_default" alt="Pokémon trasero">
+      </div>
+
+      <div class="pokemon-stats">
+        <div class="stat-label">Tipos</div>
+        <div class="type-container">
+          <div *ngFor="let type of pokemon.types" 
+               class="type-chip"
+               [style.background-color]="getTypeColor(type.type.name)"
+               [style.color]="getTextColor(getTypeColor(type.type.name))">
+            {{ type.type.name }}
+          </div>
+        </div>
+
+        <ion-item>
+          <ion-label>
+            <div class="stat-label">Altura</div>
+            {{ pokemon.height / 10 }} metros
+          </ion-label>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>
+            <div class="stat-label">Peso</div>
+            {{ pokemon.weight / 10 }} kg
+          </ion-label>
+        </ion-item>
+
+        <ion-item>
+          <ion-label>
+            <div class="stat-label">Habilidades</div>
+            <div class="abilities-container">
+              <ion-chip *ngFor="let ability of pokemon.abilities" color="medium">
+                {{ ability.ability.name }}
+              </ion-chip>
+            </div>
+          </ion-label>
+        </ion-item>
+      </div>
+    </ion-card>
+  </div>
+</ion-content>
